@@ -1,29 +1,35 @@
-name: Generate Snake Game
+name: generate-snake-game-from-github-contribution-grid
 
 on:
   schedule:
-    - cron: "0 0 * * *" # Executa todo dia à meia-noite
-  workflow_dispatch:
+    - cron: "0 0 * * *" # Executa diariamente à meia-noite (UTC)
+  workflow_dispatch: # Permite executar manualmente
 
 jobs:
-  generate:
+  build:
     runs-on: ubuntu-latest
+
     steps:
-      - name: Checkout repository
+      - name: Checkout do código
         uses: actions/checkout@v3
 
-      - name: Generate Snake
+      - name: Gerar animação da cobrinha 🐍
         uses: Platane/snk@v3.3.0
         with:
           github_user_name: samoody
           outputs: |
             dist/github-contribution-grid-snake.svg
-            dist/github-contribution-grid-snake.gif
 
-      - name: Push Snake
+      - name: Commit e Push do arquivo gerado
         uses: EndBug/add-and-commit@v9
         with:
           author_name: github-actions
           author_email: github-actions@github.com
-          message: "Generate Snake Game"
+          message: "Gerar Snake"
           add: "dist/*"
+
+      - name: Publicar como artefato
+        uses: actions/upload-artifact@v4
+        with:
+          name: github-contribution-grid-snake
+          path: dist/github-contribution-grid-snake.svg
